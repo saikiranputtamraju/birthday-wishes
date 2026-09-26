@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 🎂</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:
+      radial-gradient(circle at 50% 25%, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(135deg, #16002d, #36005c 45%, #10002a);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stars, .confetti, .balloons, .poppers {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .stars {
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,.8) 1px, transparent 1.5px),
+      radial-gradient(circle, rgba(255,220,245,.5) 1px, transparent 1.5px);
+    background-size: 80px 80px, 120px 120px;
+    background-position: 10px 20px, 40px 60px;
+    opacity: .35;
+  }
+
+  .card {
+    position: relative;
+    z-index: 5;
+    width: min(680px, 90vw);
+    padding: 55px 42px 48px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 32px;
+    background: rgba(255,255,255,.10);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 30px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.2);
+    animation: cardIn 1.2s ease both;
+  }
+
+  .cake {
+    font-size: 64px;
+    filter: drop-shadow(0 0 18px rgba(255,190,70,.6));
+    animation: float 3s ease-in-out infinite;
+    margin-bottom: 12px;
+  }
+
+  .eyebrow {
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #ffd6ef;
+    font-weight: 700;
+  }
+
+  h1 {
+    margin-top: 10px;
+    font-size: clamp(42px, 8vw, 76px);
+    line-height: .95;
+    font-weight: 900;
+    letter-spacing: -3px;
+    background: linear-gradient(90deg, #fff, #ffd0ef, #ffc15a, #fff);
+    background-size: 250%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 5s linear infinite;
+  }
+
+  .name {
+    margin-top: 10px;
+    font-size: clamp(25px, 5vw, 40px);
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 25px rgba(255,126,219,.7);
+  }
+
+  .message {
+    max-width: 540px;
+    margin: 22px auto 0;
+    color: rgba(255,255,255,.88);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  .wish {
+    margin: 25px auto 0;
+    padding: 17px 22px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.09);
+    border: 1px solid rgba(255,255,255,.14);
+    font-size: 15px;
+    line-height: 1.6;
+    color: #ffeaf8;
+  }
+
+  button {
+    margin-top: 28px;
+    border: 0;
+    padding: 14px 27px;
+    border-radius: 999px;
+    cursor: pointer;
+    color: #30002e;
+    font-size: 15px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffd0ef, #ffc65b);
+    box-shadow: 0 10px 28px rgba(255,160,220,.25);
+    transition: .25s ease;
+  }
+  button:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 15px 35px rgba(255,160,220,.4); }
+  button:active { transform: scale(.97); }
+
+  .balloon {
+    position: absolute;
+    bottom: -160px;
+    width: 70px;
+    height: 90px;
+    border-radius: 50% 50% 45% 45%;
+    opacity: .88;
+    box-shadow: inset -12px -8px 18px rgba(0,0,0,.16), inset 10px 8px 15px rgba(255,255,255,.18);
+    animation: rise linear infinite;
+  }
+  .balloon::before {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+    left: 30px; bottom: -5px;
+    background: inherit;
+    transform: rotate(45deg);
+  }
+  .balloon::after {
+    content: "";
+    position: absolute;
+    width: 1px; height: 110px;
+    background: rgba(255,255,255,.5);
+    left: 35px; top: 88px;
+  }
+
+  .b1 { left: 4%; background:#ff5f8f; animation-duration: 13s; animation-delay:-5s; }
+  .b2 { left: 15%; width:58px;height:76px;background:#ffd34e; animation-duration: 16s; animation-delay:-10s; }
+  .b3 { left: 83%; background:#58d7ff; animation-duration: 14s; animation-delay:-3s; }
+  .b4 { left: 91%; width:58px;height:76px;background:#b983ff; animation-duration: 18s; animation-delay:-9s; }
+  .b5 { left: 70%; width:52px;height:68px;background:#ff8d5c; animation-duration: 17s; animation-delay:-12s; }
+  .b6 { left: 27%; width:50px;height:66px;background:#6effb5; animation-duration: 19s; animation-delay:-14s; }
+
+  .popper {
+    position: absolute;
+    font-size: 48px;
+    animation: pop .8s ease-out both;
+    opacity: 0;
+  }
+  .left-popper { left: 4%; bottom: 10%; transform: rotate(-22deg); }
+  .right-popper { right: 4%; bottom: 10%; transform: rotate(22deg) scaleX(-1); animation-delay:.15s; }
+
+  .piece {
+    position: absolute;
+    width: 7px; height: 13px;
+    top: -20px;
+    opacity: 0;
+    animation: fall 3.5s linear infinite;
+  }
+
+  @keyframes cardIn { from { opacity:0; transform: translateY(35px) scale(.96); } to { opacity:1; transform:none; } }
+  @keyframes float { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-10px) rotate(2deg); } }
+  @keyframes shine { to { background-position:250%; } }
+  @keyframes rise { from { transform:translateY(0) rotate(-5deg); } to { transform:translateY(-125vh) rotate(8deg); } }
+  @keyframes pop { 0% { opacity:0; transform:scale(.2) rotate(-22deg); } 70% { opacity:1; transform:scale(1.15) rotate(-22deg); } 100% { opacity:.85; transform:scale(1) rotate(-22deg); } }
+  @keyframes fall { 0% { transform:translateY(0) rotate(0); opacity:1; } 100% { transform:translateY(110vh) rotate(720deg); opacity:0; } }
+
+  @media (max-width:600px) {
+    .card { padding: 40px 23px 34px; border-radius: 24px; }
+    .message { font-size: 15px; }
+    .balloon { transform: scale(.7); }
+    .popper { font-size: 35px; }
+  }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<div class="balloons">
+  <div class="balloon b1"></div>
+  <div class="balloon b2"></div>
+  <div class="balloon b3"></div>
+  <div class="balloon b4"></div>
+  <div class="balloon b5"></div>
+  <div class="balloon b6"></div>
+</div>
+
+<div class="confetti" id="confetti"></div>
+
+<div class="poppers">
+  <div class="popper left-popper">🎉</div>
+  <div class="popper right-popper">🎉</div>
+</div>
+
+<main class="card">
+  <div class="cake">🎂</div>
+  <div class="eyebrow">A special day • A special person</div>
+  <h1>Happy Birthday!</h1>
+  <div class="name">To Someone Wonderful ✨</div>
+
+  <p class="message">
+    May your birthday be filled with genuine smiles, beautiful moments,
+    unforgettable memories, and all the happiness your heart can hold.
+  </p>
+
+  <div class="wish">
+    Here's to another amazing year of dreams becoming reality,
+    new adventures, wonderful people, and countless reasons to smile. 💖
+  </div>
+
+  <button onclick="celebrate()">🎊 Celebrate!</button>
+</main>
+
+<script>
+function makeConfetti() {
+  const box = document.getElementById("confetti");
+  const colors = ["#ff5f8f","#ffd34e","#58d7ff","#b983ff","#6effb5","#ffffff"];
+  for (let i = 0; i < 90; i++) {
+    const p = document.createElement("span");
+    p.className = "piece";
+    p.style.left = Math.random() * 100 + "vw";
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDelay = (Math.random()*3) + "s";
+    p.style.animationDuration = (2.5 + Math.random()*2.5) + "s";
+    p.style.transform = `rotate(${Math.random()*360}deg)`;
+    box.appendChild(p);
+  }
+}
+function celebrate() {
+  const box = document.getElementById("confetti");
+  box.innerHTML = "";
+  for (let i = 0; i < 140; i++) {
+    const p = document.createElement("span");
+    p.className = "piece";
+    p.style.left = (45 + (Math.random() * 10)) + "vw";
+    p.style.top = (45 + (Math.random() * 8)) + "vh";
+    p.style.background = ["#ff5f8f","#ffd34e","#58d7ff","#b983ff","#6effb5","#fff"][Math.floor(Math.random()*6)];
+    p.style.animationDelay = (Math.random()*.25) + "s";
+    p.style.animationDuration = (2 + Math.random()*2) + "s";
+    box.appendChild(p);
+  }
+}
+makeConfetti();
+</script>
+</body>
+</html>
